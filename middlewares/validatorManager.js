@@ -39,10 +39,8 @@ export const bodyLinkValidator = [
 ];
 
 export const bodyRegisterValidator = [
-    body("email", "Formato de email incorrecto")
-        .trim()
-        .isEmail()
-        .normalizeEmail(),
+    body("ParticipanteName", "Formato de ParticipanteName incorrecto")
+        .trim(),
     body("password", "Mínimo 6 carácteres").trim().isLength({ min: 6 }),
     body("password", "Formato de password incorrecta").custom(
         (value, { req }) => {
@@ -56,10 +54,8 @@ export const bodyRegisterValidator = [
 ];
 
 export const bodyLoginValidator = [
-    body("email", "Formato de email incorrecto")
-        .trim()
-        .isEmail()
-        .normalizeEmail(),
+    body("ParticipanteName", "Formato de ParticipanteName incorrecto")
+        .trim(),
     body("password", "Mínimo 6 carácteres").trim().isLength({ min: 6 }),
     validationResultExpress,
 ];

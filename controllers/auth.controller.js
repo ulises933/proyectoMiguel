@@ -2,13 +2,13 @@ import { User } from "../models/User.js";
 import { generateRefreshToken, generateToken } from "../utils/tokenManager.js";
 
 export const register = async (req, res) => {
-    const { email, password } = req.body;
+    const { ParticipanteName, password } = req.body;
     try {
         // Alternativa buscando por email
-        let user = await User.findOne({ email });
+        let user = await User.findOne({ ParticipanteName });
         if (user) throw { code: 11000 };
 
-        user = new User({ email, password });
+        user = new User({ ParticipanteName, password });
         await user.save();
 
         // Generar el token JWT
@@ -28,9 +28,9 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { ParticipanteName, password } = req.body;
 
-        let user = await User.findOne({ email });
+        let user = await User.findOne({ ParticipanteName });
         if (!user)
             return res.status(401).json({
                 "success": false,
@@ -80,7 +80,7 @@ export const login = async (req, res) => {
 export const infoUser = async (req, res) => {
     try {
         const user = await User.findById(req.uid).lean();
-        return res.json({ email: user.email, uid: user.id });
+        return res.json({ ParticipanteName: user.ParticipanteName, uid: user.id });
     } catch (error) {
         return res.status(500).json({ error: "error de server" });
     }

@@ -2,7 +2,7 @@ import bcryptjs from "bcryptjs";
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    email: {
+    ParticipanteName: {
         type: String,
         required: true,
         trim: true,
