@@ -1,9 +1,9 @@
 {
-  "name": "proyectmiguel",
+  "name": "backend-twitch",
+  "type": "module",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "dev": "nodemon index.js",
     "start": "node index.js"
@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.27.2",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -19,9 +20,18 @@
     "express": "^4.18.2",
     "express-validator": "^6.14.2",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.8.0"
+    "mongoose": "^6.8.2",
+    "nanoid": "^3.3.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ulises933/ApiMike.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ulises933/ApiMike/issues"
+  },
+  "homepage": "https://github.com/ulises933/ApiMike#readme"
 }
