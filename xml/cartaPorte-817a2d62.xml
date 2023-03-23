@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cartaporte="http://www.sat.gob.mx/CartaPorte" Fecha="2017-11-15T20:21:05" TipoDocumento="ComplementoCartaPorte">
+  <cartaporte:CartaPorte Version="2.0" NumeroOperacion="20312" TipoViaje="j" TipoMovimiento="M">
+    <cartaporte:Ubicaciones>
+      <cartaporte:Origen TipoEstacion="01" DistanciaRecorrida="12456.32" IDOrigen="OR000687" RFCRemitente="XAXX010101000" NombreRemitente="Empresa Origen" NumRegIdTribRemitente="NumRegTributarioRemitente" ResidenciaFiscalRemitente="MEX" NumeroEstacionRemitente="PM001" NombreEstacionRemitente="Rosarito" NavegacionTraficoRemitente="Altura" FechaHoraSalidaRemitente="2021-01-14T00:41:02">
+        <cartaporte:Domicilio/>
+      </cartaporte:Origen>
+      <cartaporte:Destino IDDestino="DE000500" RFCDestinatario="XAXX010101000" NombreDestinatario="Empresa Destino 01" NumRegIdTribDestinatario="NumRegTributarioDestinatario 01" ResidenciaFiscalDestinatario="MEX" NumeroEstacionDestinatario="aaa" NombreEstacionDestinatario="aaa" NavegacionTraficoDestinatario="Altura" FechaHoraArriboDestinatario="2023-03-22T18:00:38">
+        <cartaporte:Domicilio/>
+      </cartaporte:Destino>
+      <cartaporte:Destino IDDestino="DE000720" RFCDestinatario="XAXX010101000" NombreDestinatario="Empresa Destino 02" NumRegIdTribDestinatario="NumRegTributarioDestinatario 02" ResidenciaFiscalDestinatario="MEX" NumeroEstacionDestinatario="aaaa" NombreEstacionDestinatario="aaaaa" NavegacionTraficoDestinatario="Altura" FechaHoraArriboDestinatario="2023-03-22T18:00:38">
+        <cartaporte:Domicilio/>
+      </cartaporte:Destino>
+    </cartaporte:Ubicaciones>
+    <cartaporte:Mercancia>
+      <cartaporte:Mercancia ClaveSTCC="37147" Descripcion="Rack Vacios" CantidadTransporta="[object Object]" Unidad="Kilogramo"/>
+      <cartaporte:Mercancia ClaveSTCC="37147" Descripcion="Partes de carrocería de vehículos de motor/ Rack Vacio" CantidadTransporta="[object Object]" Unidad="Kilogramo"/>
+    </cartaporte:Mercancia>
+    <cartaporte:Contenedor>
+      <cartaporte:Datos/>
+    </cartaporte:Contenedor>
+  </cartaporte:CartaPorte>
+</cfdi:Comprobante>
