@@ -32,30 +32,80 @@ app.post(
   authController.login
 );
 
-// end point de pureba ****************************************************************************************************************************
-// Ejemplo para crear el json **********************************************************************************
+// end point de pureba ******************************************
+// Ejemplo para crear el json ****************************
 async function ProcessDataCFDI(data) {
+
   try {
     // Validar datos de entrada
     const validationResult = validateInputData(data);
     if (!validationResult.isValid) {
       return {
-        success: false,
-        errors: validationResult.errors,
+          success: true,
+          "data": {
+              "message": "Se procesó parcialmente"
+          },
+          errors: [
+              {
+                  "code": "400",
+                  "source": "Bad Request",
+                  "title": "NumeroOperacion " + data.NumeroOperacion,
+                   detail: validationResult,
+              },
+           ],   
+
+       
       };
     }
-
+      app.use((err, req, res, next) => {
+          console.error(err.stack);
+          res.status(400).json({
+              success: false,
+              data: {
+                  message: 'Ocurrió un error interno del servidor'
+              },
+              errors: [
+                  {
+                      code: '500',
+                      source: 'Internal Server Error',
+                      title: 'Internal Server Error',
+                      detail: err.message
+                  }
+              ]
+          });
+      });
     // Crear el XML
     const xml = buildCartaPorteXML(data);
 
     return {
-      success: true,
-      xml: xml,
+        success: true,
+        "data": {
+            "message": "Se procesó exitosamente"
+        },
+        "errors": [
+            {
+                "code": "",
+                "source": "",
+                "title": "",
+                "detail": "Sin errores"
+            }
+        ],
     };
   } catch (error) {
-    console.error("Error al procesar los datos:", error);
+      console.error("Error al procesar los datos:", error);
     return {
-      success: false,
+        success: false,
+        "data": {
+            "message": "No se encontraron datos relacionados"
+        },
+        "errors": [
+            {
+                "code": "400",
+                "source": "Bad Request",
+                "title": "Bad Request",
+                "detail": "No se tiene el formato esperado"
+            }
+        ],
       errors: ["Error al procesar los datos."],
     };
   }
@@ -229,8 +279,8 @@ function validateInputData(data) {
     };
   }
 }
-// funcion xml *************************************************************************************************}
-//********************************************************************* */
+// funcion xml *********************************}
+//*********************** */
 
 function buildCartaPorteXML(data) {
   const { FechaProcesamiento, TipoDocumento, NumeroOperacion, TipoViaje, TipoMovimiento, Ubicaciones, Mercancias, Mercancia, Contenedor } = data;
@@ -336,31 +386,17 @@ return cartaPorte.end({ pretty: true });
 
 }
 
-function verifyToken(req, res, next) {
-  const token = req.headers['authorization'];
 
-  if (!token) {
-    return res.status(403).send({ message: 'No token provided' });
-  }
-
-  jwt.verify(token, 'secreto', (err, decoded) => {
-    if (err) {
-      return res.status(401).send({ message: 'Unauthorized' });
-    }
-    req.userId = decoded.id;
-    next();
-  });
-}
 // Añade el endpoint para procesar los datos del CFDI
 app.post('/api/process-data-cfdi', async (req, res) => {
-  // Obtenemos el token de autorización del header
-  const authHeader = req.headers.authorization;
-  const token = authHeader && authHeader.split(' ')[1];
+    // Obtenemos el token de autorización del header
+    const authHeader = req.headers.authorization;
+    const token = authHeader && authHeader.split(' ')[1];
 
-  if (token == null) {
-    // Si el token no se encuentra en el header, devolvemos un error 401
-    return res.status(401).json({ error: 'No se proporcionó un token de autorización' });
-  }
+    if (token == null) {
+        // Si el token no se encuentra en el header, devolvemos un error 401
+        return res.status(401).json({ error: 'No se proporcionó un token de autorización' });
+    }
   try {
     const result = await ProcessDataCFDI(req.body);
     res.status(200).send(result);
@@ -369,8 +405,39 @@ app.post('/api/process-data-cfdi', async (req, res) => {
   }
 });
 
-    
-        
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({
+        success: false,
+        "data": {
+            "message": "No se encontraron datos relacionados"
+        },
+        "errors": [
+            {
+                "code": "400",
+                "source": "Bad Request",
+                "title": "Bad Request",
+                "detail": "No se tiene el formato esperado"
+            }
+        ]
+    });
+});
+
+function verifyToken(req, res, next) {
+    const token = req.headers['authorization'];
+
+    if (!token) {
+        return res.status(403).send({ message: 'No token provided' });
+    }
+
+    jwt.verify(token, 'secreto', (err, decoded) => {
+        if (err) {
+            return res.status(401).send({ message: 'Unauthorized' });
+        }
+        req.userId = decoded.id;
+        next();
+    });
+}
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Servidor escuchando en el puerto ${port}`));
