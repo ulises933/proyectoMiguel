@@ -336,9 +336,31 @@ return cartaPorte.end({ pretty: true });
 
 }
 
+function verifyToken(req, res, next) {
+  const token = req.headers['authorization'];
 
+  if (!token) {
+    return res.status(403).send({ message: 'No token provided' });
+  }
+
+  jwt.verify(token, 'secreto', (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: 'Unauthorized' });
+    }
+    req.userId = decoded.id;
+    next();
+  });
+}
 // Añade el endpoint para procesar los datos del CFDI
 app.post('/api/process-data-cfdi', async (req, res) => {
+  // Obtenemos el token de autorización del header
+  const authHeader = req.headers.authorization;
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (token == null) {
+    // Si el token no se encuentra en el header, devolvemos un error 401
+    return res.status(401).json({ error: 'No se proporcionó un token de autorización' });
+  }
   try {
     const result = await ProcessDataCFDI(req.body);
     res.status(200).send(result);
