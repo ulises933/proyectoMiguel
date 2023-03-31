@@ -50,7 +50,7 @@ async function ProcessDataCFDI(data) {
                   "code": "400",
                   "source": "Bad Request",
                   "title": "NumeroOperacion " + data.NumeroOperacion,
-                   detail: validationResult,
+                  detail: validationResult,
               },
            ],   
 
@@ -119,13 +119,13 @@ function validateInputData(data) {
         .min(1)
         .items(
             Joi.object({
-            NumeroFactura: Joi.string().required(),
-            NumeroParte: Joi.string().required(),
-            Descripcion: Joi.string().required(),
+            NumeroFactura: Joi.string().required().max(50),
+            NumeroParte: Joi.string().required().max(50),
+            Descripcion: Joi.string().required().max(1000),
             PesoNeto: Joi.number().required(),
             PesoTara: Joi.number().required(),
-            Pedimento: Joi.string().required(),
-            FraccionArancelaria: Joi.string().required(),
+            Pedimento: Joi.string().required().max(21),
+            FraccionArancelaria: Joi.string().required().max(50),
             Cantidad: Joi.number().required(),
             })
             );
@@ -134,7 +134,7 @@ function validateInputData(data) {
         .min(1)
         .items(
             Joi.object({
-            UnidadPeso: Joi.string().required(),
+            UnidadPeso: Joi.string().required().max(5),
             PesoBruto: Joi.number().required(),
             PesoNeto: Joi.number().required(),
             PesoTara: Joi.number().required(),
@@ -146,75 +146,80 @@ function validateInputData(data) {
         .items(
             Joi.object({
             CantidadTrans: Joi.number().required(),
-            IDOrigen: Joi.string().required(),
-            IDDestino: Joi.string().required(),
+            IDOrigen: Joi.string().required().max(150),
+            IDDestino: Joi.string().required().max(150),
             DetalleMercancia: detalleMercanciaSchema,
             DetalleFactura: detalleFacturaSchema,
             })
             );
 
         const mercanciasSchema = Joi.object({
-            NumeroContenedor: Joi.string().required(),
+            NumeroContenedor: Joi.string().required().max(12),
             PesoBrutoTotal: Joi.number().required(),
-            UnidadPeso: Joi.string().required(),
+            UnidadPeso: Joi.string().required().max(150),
             PesoNetoTotal: Joi.number().required(),
             NumTotalMercancias: Joi.number().required(),
+            UUID: Joi.string().allow(''),
         });
 
         const mercanciaSchema = Joi.object({
-            NumeroContenedor: Joi.string().required(),
-            BienesTransp: Joi.string().required(),
-            TamanioContenedor: Joi.string().required(),
-            ClaveSTCC: Joi.string().required(),
-            Descripcion: Joi.string().required(),
+            NumeroContenedor: Joi.string().required().max(12),
+            BienesTransp: Joi.string().required().max(150),
+            TamañoContenedor: Joi.string().required().max(4),
+            ClaveSTCC: Joi.string().required().max(150),
+            Descripcion: Joi.string().required().max(500),
             Cantidad: Joi.number().required(),
-            ClaveUnidad: Joi.string().required(),
-            Unidad: Joi.string().required(),
-            MaterialPeligroso: Joi.string().required(),
-            CveMaterialPeligroso: Joi.string().required(),
-            Embalaje: Joi.string().required(),
-            DescripEmbalaje: Joi.string().required(),
+            ClaveUnidad: Joi.string().required().max(150),
+            Unidad: Joi.string().required().max(150),
+            MaterialPeligroso: Joi.string().required().max(150),
+            CveMaterialPeligroso: Joi.string().required().max(150),
+            Embalaje: Joi.string().required().max(150),
+            DescripEmbalaje: Joi.string().required().max(500),
             PesoEnKg: Joi.number().required(),
             CantidadTransporta: cantidadTransportaSchema,
         });
 
         const contenedorSchema = Joi.object({
-            BL: Joi.string().required(),
-            Buque: Joi.string().required(),
-            BuyerCode: Joi.string().required(),
-            PackingList: Joi.string().required(),
-            ProveedorLogistico: Joi.string().required(),
+            BL: Joi.string().max(16).required(),
+            BookingConfirmation: Joi.string().max(12).allow(''),
+            Buque: Joi.string().required().max(30),
+            BuyerCode: Joi.string().required().max(6),
+            PackingList: Joi.string().required().max(6),
+            ProveedorLogistico: Joi.string().required().max(3),
         });
 
 
-      const domicilioSchema = Joi.object({
-        Calle: Joi.string().required(),
-        NumeroExterior: Joi.string().required(),
-        NumeroInterior: Joi.string(),
-        Colonia: Joi.string().required(),
-        Localidad: Joi.string().required(),
-        Referencia: Joi.string(),
-        Municipio: Joi.string().required(),
-        Estado: Joi.string().required(),
-        Pais: Joi.string().length(3).required(),
-        CodigoPostal: Joi.string().length(5).required(),
-      });
+    const domicilioSchema = Joi.array()
+        .min(1)
+        .items(
+            Joi.object({
+        Calle: Joi.string().required().max(250),
+        NumeroExterior: Joi.string().required().max(10),
+        NumeroInterior:Joi.string().required(),
+        Colonia: Joi.string().required().max(10),
+        Localidad: Joi.string().required().max(10),
+        Referencia: Joi.string().max(250),
+        Municipio: Joi.string().required().max(10),
+        Estado: Joi.string().required().max(10),
+        Pais: Joi.string().required().max(10),
+        CodigoPostal: Joi.string().max(10).required(),
+      }));
 
       const ubicacionSchema = Joi.object({
-        TipoEstacion: Joi.string().length(2).required(),
+        TipoEstacion: Joi.string().length(2).required().max(10),
         DistanciaRecorrida: Joi.number().required(),
         Origen: Joi.array()
           .min(1)
           .items(
             Joi.object({
-              IDOrigen: Joi.string().required(),
-              RFCRemitente: Joi.string().required(),
-              NombreRemitente: Joi.string().required(),
-              NumRegIdTribRemitente: Joi.string(),
-              ResidenciaFiscalRemitente: Joi.string().length(3),
-              NumeroEstacionRemitente: Joi.string(),
-              NombreEstacionRemitente: Joi.string(),
-              NavegacionTraficoRemitente: Joi.string(),
+              IDOrigen: Joi.string().required().max(50),
+              RFCRemitente: Joi.string().required().max(50),
+              NombreRemitente: Joi.string().required().max(250),
+              NumRegIdTribRemitente: Joi.string().max(50),
+              ResidenciaFiscalRemitente: Joi.string().max(50),
+              NumeroEstacionRemitente: Joi.string().max(50),
+              NombreEstacionRemitente: Joi.string().max(250),
+              NavegacionTraficoRemitente: Joi.string().max(50),
               FechaHoraSalidaRemitente: Joi.string().isoDate().required(),
               Domicilio: domicilioSchema,
             })
@@ -224,14 +229,14 @@ function validateInputData(data) {
           .min(1)
           .items(
             Joi.object({
-              IDDestino: Joi.string().required(),
-              RFCDestinatario: Joi.string().required(),
-              NombreDestinatario: Joi.string().required(),
-              NumRegIdTribDestinatario: Joi.string(),
-              ResidenciaFiscalDestinatario: Joi.string().length(3),
-              NumeroEstacionDestinatario: Joi.string(),
-              NombreEstacionDestinatario: Joi.string(),
-              NavegacionTraficoDestinatario: Joi.string(),
+              IDDestino: Joi.string().required().max(50),
+              RFCDestinatario: Joi.string().required().max(50),
+              NombreDestinatario: Joi.string().required().max(250),
+              NumRegIdTribDestinatario: Joi.string().max(50),
+              ResidenciaFiscalDestinatario: Joi.string().max(50),
+              NumeroEstacionDestinatario: Joi.string().max(50),
+              NombreEstacionDestinatario: Joi.string().max(250),
+              NavegacionTraficoDestinatario: Joi.string().max(50),
               FechaHoraSalidaDestinatario: Joi.string().isoDate().required(),
               Domicilio: domicilioSchema,
             })
@@ -243,7 +248,7 @@ function validateInputData(data) {
         FechaProcesamiento: Joi.string().isoDate().required(),
         PlantaProcesamiento: Joi.string(),
         Usuario: Joi.string().required(),
-        TipoDocumento: Joi.string().valid("ComplementoCartaPorte").required(),
+        TipoDocumento: Joi.string().valid("ComplementoCartaPorte").required().max(150),
         NumeroOperacion: Joi.string().required(),
         TipoViaje: Joi.string().length(1).required(),
         TipoMovimiento: Joi.string().length(1).required(),
@@ -265,12 +270,26 @@ function validateInputData(data) {
             console.log('Los datos son inválidos:', error.message);
         });
 
-
-  const validationResult = mainSchema.validate(data, { abortEarly: false });
+    const customErrorMessages = {
+        "any.required": "El dato {{#label}} es un campo requerido",
+        "string.empty": "El dato {{#label}} no debe estar vacío",
+        "string.min": "El dato {{#label}} debe tener al menos {{#limit}} caracteres",
+        "string.base": "El dato {{#label}} debe ser un String",
+        "string.max": "El dato {{#label}} debe tener como máximo {{#limit}} caracteres",
+        "string.alphanum": "El dato {{#label}} debe contener solo caracteres alfanuméricos",
+        "string.email": "El dato {{#label}} debe ser una dirección de correo electrónico válida",
+        "string.isoDate": "El dato {{#label}} debe ser una fecha ISO válida",
+        "number.base": "El dato {{#label}} debe ser un número",
+        "number.min": "El dato {{#label}} debe ser mayor o igual a {{#limit}}",
+        "number.max": "El dato {{#label}} debe ser menor o igual a {{#limit}}",
+        "array.min": "El dato Debe haber al menos {{#limit}} {{#label}}",
+        "object.base": "El dato {{#label}} debe ser un objeto",
+        "object.min": "El dato Debe haber al menos {{#limit}} {{#label}}",
+    };
+    const validationResult = mainSchema.validate(data, { abortEarly: false, messages: customErrorMessages });
 
   if (validationResult.error) {
     return {
-      isValid: false,
       errors: validationResult.error.details.map((error) => error.message),
     };
   } else {
