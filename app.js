@@ -262,14 +262,6 @@ function validateInputData(data) {
         // Tus datos JSON
     };
 
-    mainSchema.validateAsync(datos)
-        .then(() => {
-            console.log('Los datos son válidos.');
-        })
-        .catch((error) => {
-            console.log('Los datos son inválidos:', error.message);
-        });
-
     const customErrorMessages = {
         "any.required": "El dato {{#label}} es un campo requerido",
         "string.empty": "El dato {{#label}} no debe estar vacío",
