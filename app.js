@@ -9,7 +9,6 @@ const authController = require("./controllers/authController");
 const crypto = require('crypto');
 const builder = require('xmlbuilder');
 const moment = require('moment');
-const fs = require('fs');  // Añade esto
 import https from require('https');  // Añade esto
 dotenv.config();
 
