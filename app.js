@@ -458,6 +458,6 @@ const options = {
     cert: fs.readFileSync('/etc/letsencrypt/live/apidelbosque2.duckdns.org/fullchain.pem')
 };
 
-https.createServer(options, app).listen(PORT, () => {
-    console.log(`🍉🍉🍉 https://localhost:${PORT}`);
+https.createServer(options, app).listen(port, () => {
+    console.log(`🍉🍉🍉 https://localhost:${port}`);
 });
