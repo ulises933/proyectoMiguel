@@ -9,8 +9,8 @@ const authController = require("./controllers/authController");
 const crypto = require('crypto');
 const builder = require('xmlbuilder');
 const moment = require('moment');
-import fs from "fs";  // Añade esto
-import https from "https";  // Añade esto
+const fs = require('fs');  // Añade esto
+import https from require('https');  // Añade esto
 dotenv.config();
 
 const app = express();
@@ -452,7 +452,7 @@ function verifyToken(req, res, next) {
     });
 }
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 443;
 // Cambia la manera en que inicias el servidor para usar HTTPS
 const options = {
     key: fs.readFileSync('/etc/letsencrypt/live/apidelbosque2.duckdns.org/privkey.pem'),
