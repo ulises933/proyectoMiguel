@@ -41,10 +41,10 @@ app.post(
 // end point de pureba ***********************************
 async function ProcessDataCFDI(dataArray) {
   try {
-    const results = dataArray.map(async data => {
+    // Utiliza Promise.all para esperar a que todas las promesas se resuelvan
+    const results = await Promise.all(dataArray.map(async data => {
       const validationResult = validateInputData(data);
       if (validationResult.error) {
-        // Guardar errores en MongoDB
         const errorToSave = new ErrorLog({
           success: false,
           data: [{
@@ -67,32 +67,26 @@ async function ProcessDataCFDI(dataArray) {
           })
         };
       } else {
-        // Si no hay errores, procesa los datos
         try{
-          // Verifica y elimina un error previo en MongoDB para este folio si existe
-        await ErrorLog.deleteMany({ "data.folio": data.NumeroOperacion.toString() });
+          await ErrorLog.deleteMany({ "data.folio": data.NumeroOperacion.toString() });
         }catch(error){
-          console.log(error)
+          console.log(error);
         }
-        const xml = buildCartaPorteXML(data);
+        const xml = buildCartaPorteXML(data); // Asegúrate de que esta función no tenga efectos secundarios si se espera o no su resultado
         return {
           success: true,
           data: { message: "Se procesó exitosamente" },
           errors: []
         };
       }
-    });
+    }));
 
-    // Aquí tendrías que decidir qué hacer con los resultados.
-    // Por ejemplo, podrías devolver un error si alguno falla,
-    // o podrías devolver éxito si todos pasan.
     return results;
   } catch (error) {
-    // Guardar errores en MongoDB
     const errorToSave = new ErrorLog({
       success: false,
       data: [{
-        folio: data.NumeroOperacion.toString(),
+        folio: "Desconocido",
         errorDetail: [{
           message: "Error en los datos de entrada Status Code 400",
         }],
@@ -109,12 +103,11 @@ async function ProcessDataCFDI(dataArray) {
           source: "Bad Request",
           detail: "No se tiene el formato esperado"
         },
-        // ... y otros errores si son necesarios
       ]
     };
   }
 }
-// validate input
+
 const Joi = require('joi');
 
 function validateInputData(data) {
@@ -330,7 +323,7 @@ function validateInputData(data) {
     }
     
     const validationResult = mainSchema.validate(data, { abortEarly: false, messages: customErrorMessages });
-
+    console.log(errors)
   if (validationResult.error) {
     return {
       errors: validationResult.error.details.map((error) => error.message),
