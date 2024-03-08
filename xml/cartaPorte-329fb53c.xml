@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cartaporte="http://www.sat.gob.mx/CartaPorte" Fecha="2023-10-30T10:08:11" TipoDocumento="ComplementoCartaPorte">
+  <cfdi:Emisor RegimenFiscal="601" Rfc="ETB170323P63" Nombre="ENLACES TERRESTRES DEL BOSQUE"/>
+  <cfdi:Receptor Rfc="NME610911L71" Nombre="NISSAN MEXICANA" DomicilioFiscalReceptor="01090" RegimenFiscalReceptor="601"/>
+  <cartaporte:CartaPorte30 Version="3.0" NumeroOperacion="149902" TipoViaje="N" TipoMovimiento="T">
+    <cartaporte:Ubicaciones>
+      <cartaporte:Origen TipoEstacion="3" DistanciaRecorrida="1200" IDOrigen="OR006050" RFCRemitente="NME610911L71" NombreRemitente="PROV INTERNO: CIV" NumRegIdTribRemitente="" ResidenciaFiscalRemitente="MEX" NumeroEstacionRemitente="" NombreEstacionRemitente="" NavegacionTraficoRemitente="" FechaHoraSalidaRemitente="2023-10-26T03:00:00">
+        <cartaporte:Domicilio Calle="AVENIDA CIVAC" NumeroExterior="12" NumeroInterior="" Colonia="0181" Localidad="02" Referencia="" Municipio="011" Estado="MOR" Pais="MEX" CodigoPostal="62578"/>
+      </cartaporte:Origen>
+      <cartaporte:Destino IDDestino="DE000953" RFCDestinatario="EOP640608I13" NombreDestinatario="HELLA AUTOMOTIVE MEXICO " NumRegIdTribDestinatario="" ResidenciaFiscalDestinatario="MEX" NumeroEstacionDestinatario="" NombreEstacionDestinatario="" NavegacionTraficoDestinatario="" FechaHoraArriboDestinatario="2024-03-07T19:00:26">
+        <cartaporte:Domicilio Calle="Calle Zaraiche" NumeroExterior="3033" NumeroInterior="B" Colonia="0003" Localidad="" Referencia="" Municipio="017" Estado="GUA" Pais="MEX" CodigoPostal="36835"/>
+      </cartaporte:Destino>
+      <cartaporte:Destino IDDestino="DE003484" RFCDestinatario="NCM1111019H6" NombreDestinatario="NISHIKAWA SEALING SYSTEMS MEXICO " NumRegIdTribDestinatario="" ResidenciaFiscalDestinatario="MEX" NumeroEstacionDestinatario="" NombreEstacionDestinatario="" NavegacionTraficoDestinatario="" FechaHoraArriboDestinatario="2024-03-07T19:00:26">
+        <cartaporte:Domicilio Calle="Av. Mina de Guadalupe" NumeroExterior="575" NumeroInterior="" Colonia="0001" Localidad="" Referencia="" Municipio="037" Estado="GUA" Pais="MEX" CodigoPostal="36275"/>
+      </cartaporte:Destino>
+    </cartaporte:Ubicaciones>
+    <cartaporte:Mercancias>
+      <cartaporte:Mercancia ClaveSTCC="T2S2R2" Descripcion="Racks vac?os" Unidad="PIEZAS">
+        <cartaporte:CantidadTransporta CantidadTrans="2" IDOrigen="OR006050" IDDestino="DE000953"/>
+        <cartaporte:DetalleMercancia UnidadPeso="KGM" PesoBruto="4" PesoNeto="2" PesoTara="2"/>
+      </cartaporte:Mercancia>
+      <cartaporte:Mercancia ClaveSTCC="T2S2R2" Descripcion="Material de Partes Automotrices" Unidad="PIEZAS">
+        <cartaporte:CantidadTransporta CantidadTrans="360" IDOrigen="OR000953" IDDestino="DE003484"/>
+        <cartaporte:DetalleMercancia UnidadPeso="KGM" PesoBruto="2" PesoNeto="0" PesoTara="2"/>
+      </cartaporte:Mercancia>
+      <cartaporte:Mercancia ClaveSTCC="T2S2R2" Descripcion="Material de Partes Automotrices" Unidad="PIEZAS">
+        <cartaporte:CantidadTransporta CantidadTrans="720" IDOrigen="OR003484" IDDestino="DE006050"/>
+        <cartaporte:DetalleMercancia UnidadPeso="KGM" PesoBruto="531.36" PesoNeto="243.36" PesoTara="288"/>
+      </cartaporte:Mercancia>
+    </cartaporte:Mercancias>
+    <cartaporte:Contenedor/>
+  </cartaporte:CartaPorte30>
+</cfdi:Comprobante>

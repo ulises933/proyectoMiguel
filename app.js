@@ -10,6 +10,8 @@ const crypto = require('crypto');
 const builder = require('xmlbuilder');
 const moment = require('moment');
 const https = require('https');
+const http = require('http');
+
 dotenv.config();
 
 const app = express();
@@ -151,7 +153,20 @@ function validateInputData(data) {
             PesoNetoTotal: Joi.number().required().label('PesoNetoTotal'),
             NumTotalMercancias: Joi.number().required().label('NumTotalMercancias'),
             UUID: Joi.string().allow('').label('UUID'),
+            CargoPorTasacion: Joi.number().label('CargoPorTasacion'),
+            LogisticaInversaRecoleccionDevolucion: Joi.string().label('LogisticaInversaRecoleccionDevolucion'),
         });
+        const documentacionAduaneraSchema = Joi.object({
+          TipoDocumento: Joi.string().max(150).label('TipoDocumento'),
+          NumPedimento: Joi.string().max(150).label('NumPedimento'),
+          IdentDocAduanero: Joi.string().max(150).label('IdentDocAduanero'),
+          RFCImpo: Joi.string().max(150).label('RFCImpo'),
+          GuiasIdentificacion: Joi.string().max(150).label('GuiasIdentificacion'),
+          NumeroGuiaIdentifiacion: Joi.string().max(150).label('NumeroGuiaIdentifiacion'),
+          DescripGuiaIdentificacion: Joi.string().max(150).label('DescripGuiaIdentificacion'),
+          PesoGuiaIdentificacion: Joi.string().max(150).label('PesoGuiaIdentificacion'),
+          
+      });
 
         const mercanciaSchema = Joi.object({
             NumeroContenedor: Joi.string().required().max(12).label('NumeroContenedor'),
@@ -167,6 +182,13 @@ function validateInputData(data) {
             Embalaje: Joi.string().required().max(150).label('Embalaje'),
             DescripEmbalaje: Joi.string().required().max(500).label('DescripEmbalaje'),
             PesoEnKg: Joi.number().required().label('PesoEnKg'),
+            ValorMercancia: Joi.number().label('ValorMercancia'),
+            Moneda: Joi.string().max(150).label('Moneda'),
+            FraccionArancelaria: Joi.string().max(150).label('FraccionArancelaria'),
+            UUIDComercioExt: Joi.string().max(150).label('UUIDComercioExt'),
+            TipoMateria: Joi.string().max(150).label('TipoMateria'),
+            DescripcionMateria: Joi.string().max(150).label('DescripcionMateria'),
+            DocumentacionAduanera: documentacionAduaneraSchema,
             CantidadTransporta: cantidadTransportaSchema,
         });
 
@@ -212,6 +234,7 @@ function validateInputData(data) {
               NombreEstacionRemitente: Joi.string().max(250).label('NombreEstacionRemitente'),
               NavegacionTraficoRemitente: Joi.string().max(50).label('NavegacionTraficoRemitente'),
               FechaHoraSalidaRemitente: Joi.string().isoDate().required().label('FechaHoraSalidaRemitente'),
+              Distancia: Joi.number().label('Distancia'),
               Domicilio: domicilioSchema,
             })
           )
@@ -229,6 +252,7 @@ function validateInputData(data) {
               NombreEstacionDestinatario: Joi.string().max(250).label('NombreEstacionDestinatario'),
               NavegacionTraficoDestinatario: Joi.string().max(50).label('NavegacionTraficoDestinatario'),
               FechaHoraSalidaDestinatario: Joi.string().isoDate().required().label('FechaHoraSalidaDestinatario'),
+              Distancia: Joi.number().label('Distancia'),
               Domicilio: domicilioSchema,
             })
           )
@@ -243,6 +267,10 @@ function validateInputData(data) {
         NumeroOperacion: Joi.string().required().label('NumeroOperacion'),
         TipoViaje: Joi.string().length(1).required().label('TipoViaje'),
         TipoMovimiento: Joi.string().length(1).required().label('TipoMovimiento'),
+        RegimenAduanero: Joi.string().max(100).label('RegimenAduanero'),
+        EntradaSalidaMerc: Joi.string().max(100).label('EntradaSalidaMerc'),
+        ViaEntradaSalida: Joi.string().max(100).label('ViaEntradaSalida'),
+        TipoEnvio: Joi.string().max(100).label('TipoEnvio'),
         Ubicaciones: Joi.array().min(1).items(ubicacionSchema).required().label('Ubicaciones'),
         Mercancias: Joi.array().min(1).items(mercanciasSchema).required().label('Mercancias'),
         Mercancia: Joi.array().min(1).items(mercanciaSchema).required().label('Mercancia'),
@@ -300,10 +328,23 @@ function buildCartaPorteXML(data) {
   cartaPorte.att("xmlns:cartaporte", "http://www.sat.gob.mx/CartaPorte");
   cartaPorte.att("Fecha", moment(FechaProcesamiento).format("YYYY-MM-DDTHH:mm:ss"));
   cartaPorte.att("TipoDocumento", TipoDocumento);
+  
+  const CFDIEmisor = cartaPorte.ele("cfdi:Emisor");
+  CFDIEmisor.att("RegimenFiscal", "601");
+  CFDIEmisor.att("Rfc","ETB170323P63");
+  CFDIEmisor.att("Nombre", "ENLACES TERRESTRES DEL BOSQUE");
+
+  //const CFDIReceptor
+  const CFDIReceptor = cartaPorte.ele("cfdi:Receptor");
+  CFDIReceptor.att("Rfc", "NME610911L71");
+  CFDIReceptor.att("Nombre","NISSAN MEXICANA");
+  CFDIReceptor.att("DomicilioFiscalReceptor", "01090");
+  CFDIReceptor.att("RegimenFiscalReceptor", "601");
+ 
 
   // Agregar el nodo Carta Porte
-  const cartaPorteNode = cartaPorte.ele("cartaporte:CartaPorte");
-  cartaPorteNode.att("Version", "2.0");
+  const cartaPorteNode = cartaPorte.ele("cartaporte:CartaPorte30");
+  cartaPorteNode.att("Version", "3.0");
   cartaPorteNode.att("NumeroOperacion", NumeroOperacion);
   cartaPorteNode.att("TipoViaje", TipoViaje);
   cartaPorteNode.att("TipoMovimiento", TipoMovimiento);
@@ -493,11 +534,18 @@ function verifyToken(req, res, next) {
 
 const port = process.env.PORT || 443;
 // Cambia la manera en que inicias el servidor para usar HTTPS
-const options = {
-  key: fs.readFileSync('/etc/letsencrypt/live/apidelbosque2.duckdns.org/privkey.pem'),
-  cert: fs.readFileSync('/etc/letsencrypt/live/apidelbosque2.duckdns.org/fullchain.pem')
-};
+// const options = {
+//   key: fs.readFileSync('/etc/letsencrypt/live/apidelbosque2.duckdns.org/privkey.pem'),
+//   cert: fs.readFileSync('/etc/letsencrypt/live/apidelbosque2.duckdns.org/fullchain.pem')
+// };
 
-https.createServer(options, app).listen(port, () => {
-  console.log(`🍉🍉🍉 https://localhost:${port}`);
+// https.createServer(options, app).listen(port, () => {
+//   console.log(`🍉🍉🍉 https://localhost:${port}`);
+// });
+
+
+http.createServer( app).listen(port, () => {
+  console.log(`🍉🍉🍉 http://localhost:${port}`);
 });
+
+// jajaj creo que ya jalo xd

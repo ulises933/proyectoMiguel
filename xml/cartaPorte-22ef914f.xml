@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cartaporte="http://www.sat.gob.mx/CartaPorte" Fecha="2023-10-26T13:10:31" TipoDocumento="ComplementoCartaPorte">
+  <cfdi:Emisor RegimenFiscal="601" Rfc="ETB170323P63" Nombre="ENLACES TERRESTRES DEL BOSQUE"/>
+  <cfdi:Receptor Rfc="NME610911L71" Nombre="NISSAN MEXICANA" DomicilioFiscalReceptor="01090" RegimenFiscalReceptor="601"/>
+  <cartaporte:CartaPorte30 Version="3.0" NumeroOperacion="143767" TipoViaje="E" TipoMovimiento="M">
+    <cartaporte:Ubicaciones>
+      <cartaporte:Origen TipoEstacion="3" DistanciaRecorrida="594" IDOrigen="OR006010" RFCRemitente="NME610911L71" NombreRemitente="NISSAN MEXICANA - PROV INTERNO: ILN NMEX" NumRegIdTribRemitente="XXXX124" ResidenciaFiscalRemitente="MEX" NumeroEstacionRemitente="" NombreEstacionRemitente="PROV INTERNO: ILN NMEX" NavegacionTraficoRemitente="" FechaHoraSalidaRemitente="2023-10-26T00:00:00">
+        <cartaporte:Domicilio Calle="CARRETERA PANAMERICANA SUR KM 112" NumeroExterior="INTERIOR PARQUE DE PROVEEDORES DSP #115" NumeroInterior="" Colonia="0453" Localidad="" Referencia="" Municipio="001" Estado="AGU" Pais="MEX" CodigoPostal="20340"/>
+      </cartaporte:Origen>
+      <cartaporte:Destino IDDestino="DE000810" RFCDestinatario="XAXX010101000" NombreDestinatario="ADUANA ALTAMIRA, TAMAULIPAS" NumRegIdTribDestinatario="XXXX124" ResidenciaFiscalDestinatario="MEX" NumeroEstacionDestinatario="" NombreEstacionDestinatario="" NavegacionTraficoDestinatario="" FechaHoraArriboDestinatario="2024-03-07T19:16:25">
+        <cartaporte:Domicilio Calle="Carretera Rio Tamesi" NumeroExterior="KM 0 + 720" NumeroInterior="" Colonia="1760" Localidad="01" Referencia="" Municipio="003" Estado="TAM" Pais="MEX" CodigoPostal="89600"/>
+      </cartaporte:Destino>
+    </cartaporte:Ubicaciones>
+    <cartaporte:Mercancias>
+      <cartaporte:Mercancia ClaveSTCC="" Descripcion="Material de Partes Automotrices" Unidad="PIEZAS">
+        <cartaporte:CantidadTransporta CantidadTrans="864" IDOrigen="OR006010" IDDestino="DE000810"/>
+        <cartaporte:DetalleMercancia UnidadPeso="KGM" PesoBruto="6069.6" PesoNeto="786.24" PesoTara="5283.36"/>
+      </cartaporte:Mercancia>
+      <cartaporte:Mercancia ClaveSTCC="" Descripcion="Rack Vacios" Unidad="PIEZAS">
+        <cartaporte:CantidadTransporta CantidadTrans="602" IDOrigen="OR006010" IDDestino="DE000810"/>
+        <cartaporte:DetalleMercancia UnidadPeso="KGM" PesoBruto="5283.36" PesoNeto="5184" PesoTara="99.36"/>
+      </cartaporte:Mercancia>
+    </cartaporte:Mercancias>
+    <cartaporte:Contenedor/>
+  </cartaporte:CartaPorte30>
+</cfdi:Comprobante>
