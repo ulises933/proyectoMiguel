@@ -11,7 +11,10 @@ const builder = require('xmlbuilder');
 const moment = require('moment');
 const https = require('https');
 const http = require('http');
+const authenticateToken = require('./controllers/authenticateToken');
 
+
+const ErrorLog = require("./models/Errors");
 dotenv.config();
 
 const app = express();
@@ -35,14 +38,23 @@ app.post(
   authController.login
 );
 
-// end point de pureba ******************************************
-// Ejemplo para crear el json ****************************
+// end point de pureba ***********************************
 async function ProcessDataCFDI(dataArray) {
   try {
-    const results = dataArray.map(data => {
+    const results = dataArray.map(async data => {
       const validationResult = validateInputData(data);
       if (validationResult.error) {
-        // Manejo de errores aquí
+        // Guardar errores en MongoDB
+        const errorToSave = new ErrorLog({
+          success: false,
+          data: [{
+            folio: data.NumeroOperacion.toString(),
+            errorDetail: validationResult.error.details.map(detail => ({
+              message: detail.message,
+            })),
+          }]
+        });
+        await errorToSave.save();
         return {
           success: false,
           data: { message: "Se procesó parcialmente" },
@@ -50,14 +62,19 @@ async function ProcessDataCFDI(dataArray) {
             return {
               code: "400",
               source: "Bad Requests",
-              detail: detail.message // O cualquier otra estructura de error que necesites
+              detail: detail.message 
             };
           })
         };
       } else {
-        // Si no hay errores, procesa los datos como sea necesario
+        // Si no hay errores, procesa los datos
+        try{
+          // Verifica y elimina un error previo en MongoDB para este folio si existe
+        await ErrorLog.deleteMany({ "data.folio": data.NumeroOperacion.toString() });
+        }catch(error){
+          console.log(error)
+        }
         const xml = buildCartaPorteXML(data);
-        // ... y cualquier otro procesamiento
         return {
           success: true,
           data: { message: "Se procesó exitosamente" },
@@ -71,6 +88,17 @@ async function ProcessDataCFDI(dataArray) {
     // o podrías devolver éxito si todos pasan.
     return results;
   } catch (error) {
+    // Guardar errores en MongoDB
+    const errorToSave = new ErrorLog({
+      success: false,
+      data: [{
+        folio: data.NumeroOperacion.toString(),
+        errorDetail: [{
+          message: "Error en los datos de entrada Status Code 400",
+        }],
+      }]
+    });
+    await errorToSave.save();
     console.error("Error al procesar los datos:", error);
     return {
       success: false,
@@ -480,21 +508,56 @@ return cartaPorte.end({ pretty: true });
 
 
 // Añade el endpoint para procesar los datos del CFDI
-app.post('/api/process-data-cfdi', async (req, res) => {
+app.post('/api/process-data-cfdi', authenticateToken,async (req, res) => {
   //console.log(req.body);
     // Obtenemos el token de autorización del header
-    const authHeader = req.headers.authorization;
-    const token = authHeader && authHeader.split(' ')[1];
-
-    if (token == null) {
-        // Si el token no se encuentra en el header, devolvemos un error 401
-        return res.status(401).json({ error: 'No se proporcionó un token de autorización' });
-    }
+    
   try {
     const result = await ProcessDataCFDI(req.body);
     res.status(200).send(result);
   } catch (error) {
     res.status(500).send({ message: 'Error processing data', error });
+  }
+});
+
+app.post('/api/GetErrors',authenticateToken, async (req, res) => {
+ 
+  try {
+    const errors = await ErrorLog.find({ success: false });
+    const errorResponse = errors.map(error => {
+      return {
+        success: error.success,
+        data: error.data.map(dataItem => ({
+          folio: dataItem.folio,
+          errorDetail: dataItem.errorDetail.map(detail => ({
+            message: detail.message
+          }))
+        })),
+        errors: {
+          code: "",
+          title: "", // Asumiendo que 'source' se desea usar como 'title'
+          detail: "",
+        }
+      };
+    });
+
+    res.json(errorResponse);
+  } catch (error) {
+    console.error("Error al recuperar los errores:", error);
+    res.status(500).json({
+      success: false,
+      "data": {
+          "message": ""
+      },
+      "errors": [
+          {
+              "code": "400",
+              "source": "Bad Request",
+              "title": "Bad Request",
+              "detail": "error recuperando los errores"
+          }
+      ]
+  });
   }
 });
 
@@ -532,7 +595,7 @@ function verifyToken(req, res, next) {
   });
 }
 
-const port = process.env.PORT || 443;
+const port = process.env.PORT || 3000;
 // Cambia la manera en que inicias el servidor para usar HTTPS
 // const options = {
 //   key: fs.readFileSync('/etc/letsencrypt/live/apidelbosque2.duckdns.org/privkey.pem'),
@@ -543,9 +606,11 @@ const port = process.env.PORT || 443;
 //   console.log(`🍉🍉🍉 https://localhost:${port}`);
 // });
 
-
-http.createServer( app).listen(port, () => {
-  console.log(`🍉🍉🍉 http://localhost:${port}`);
+app.listen(3000, () => {
+  console.log('App listening on port 3000!');
 });
+// http.createServer( app).listen(port, () => {
+//   console.log(`🍉🍉🍉 http://localhost:${port}`);
+// });
 
 // jajaj creo que ya jalo xd
