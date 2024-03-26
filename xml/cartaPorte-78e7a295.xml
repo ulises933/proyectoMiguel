@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/4" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cartaporte="http://www.sat.gob.mx/CartaPorte" Fecha="2023-10-26T13:10:31" TipoDocumento="ComplementoCartaPorte">
+  <cfdi:Emisor RegimenFiscal="601" Rfc="ETB170323P63" Nombre="ENLACES TERRESTRES DEL BOSQUE"/>
+  <cfdi:Receptor Rfc="NME610911L71" Nombre="NISSAN MEXICANA" DomicilioFiscalReceptor="01090" RegimenFiscalReceptor="601"/>
+  <cartaporte:CartaPorte30 Version="3.0" NumeroOperacion="143770" TipoViaje="N" TipoMovimiento="T">
+    <cartaporte:Ubicaciones>
+      <cartaporte:Origen TipoEstacion="3" DistanciaRecorrida="594" IDOrigen="OR000810" RFCRemitente="XAXX010101000" NombreRemitente="ADUANA ALTAMIRA, TAMAULIPAS" NumRegIdTribRemitente="" ResidenciaFiscalRemitente="MEX" NumeroEstacionRemitente="" NombreEstacionRemitente="ADUANA ALTAMIRA, TAMAULIPAS" NavegacionTraficoRemitente="" FechaHoraSalidaRemitente="2023-10-26T00:00:00">
+        <cartaporte:Domicilio Calle="Carretera Rio Tamesi" NumeroExterior="KM 0 + 720" NumeroInterior="" Colonia="1760" Localidad="01" Referencia="" Municipio="003" Estado="TAM" Pais="MEX" CodigoPostal="89600"/>
+      </cartaporte:Origen>
+      <cartaporte:Destino IDDestino="DE006010" RFCDestinatario="NME610911L71" NombreDestinatario="NISSAN MEXICANA - PROV INTERNO: ILN NMEX" NumRegIdTribDestinatario="" ResidenciaFiscalDestinatario="MEX" NumeroEstacionDestinatario="" NombreEstacionDestinatario="PROV INTERNO: ILN NMEX" NavegacionTraficoDestinatario="" FechaHoraArriboDestinatario="2024-03-08T18:59:25">
+        <cartaporte:Domicilio Calle="CARRETERA PANAMERICANA SUR KM 112" NumeroExterior="INTERIOR PARQUE DE PROVEEDORES DSP #115" NumeroInterior="" Colonia="0453" Localidad="" Referencia="" Municipio="001" Estado="AGU" Pais="MEX" CodigoPostal="20340"/>
+      </cartaporte:Destino>
+    </cartaporte:Ubicaciones>
+    <cartaporte:Mercancias>
+      <cartaporte:Mercancia ClaveSTCC="" Descripcion="Material de Partes Automotrices" Unidad="PIEZAS">
+        <cartaporte:CantidadTransporta CantidadTrans="21312" IDOrigen="OR006010" IDDestino="DE000810"/>
+        <cartaporte:DetalleMercancia UnidadPeso="KGM" PesoBruto="8605" PesoNeto="4293.258" PesoTara="4311.742"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="165005RA0B" Descripcion="CLNR ASSY-AIR" PesoNeto="732" PesoTara="1177.2" Pedimento="" FraccionArancelaria="" Cantidad="600"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="165545RA0B" Descripcion="DUCT ASSY-AIR,DUST S" PesoNeto="198.72" PesoTara="357.28" Pedimento="" FraccionArancelaria="" Cantidad="864"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="165765RA0A" Descripcion="DUCT ASSY-AIR,C/S" PesoNeto="165.888" PesoTara="81.812" Pedimento="" FraccionArancelaria="" Cantidad="324"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="165855RA1B" Descripcion="RESONATOR ASSY" PesoNeto="696.6" PesoTara="842.4" Pedimento="" FraccionArancelaria="" Cantidad="1080"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="349015RA0A" Descripcion="DVC COMPL-AUTO TRANS" PesoNeto="196.8" PesoTara="187" Pedimento="" FraccionArancelaria="" Cantidad="192"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="349015RC0A" Descripcion="DVC COMPL-AUTO TRANS" PesoNeto="196.8" PesoTara="187" Pedimento="" FraccionArancelaria="" Cantidad="192"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="620725R00A" Descripcion="MLDG-FR BMPR" PesoNeto="113.4" PesoTara="356.1" Pedimento="" FraccionArancelaria="" Cantidad="648"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="620745R00A" Descripcion="MLDG-FR BMPR,RH" PesoNeto="10.8" PesoTara="114.3" Pedimento="" FraccionArancelaria="" Cantidad="90"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="671A15RB0B" Descripcion="REINF-DASH UPR,LH" PesoNeto="288" PesoTara="64.3" Pedimento="" FraccionArancelaria="" Cantidad="960"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="739409AE1A" Descripcion="GRIP ASSY-ASST" PesoNeto="217.8" PesoTara="134.4" Pedimento="" FraccionArancelaria="" Cantidad="1980"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="767435RB0B" Descripcion="REINF-RR WH INR,LH" PesoNeto="288" PesoTara="64.3" Pedimento="" FraccionArancelaria="" Cantidad="2880"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="803865RB0A" Descripcion="GLASS RUN-DOOR LWR S" PesoNeto="73.08" PesoTara="0.02" Pedimento="" FraccionArancelaria="" Cantidad="360"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="806469DJ1A" Descripcion="ESCUT-RR DOOR O/S HA" PesoNeto="16.56" PesoTara="61.14" Pedimento="" FraccionArancelaria="" Cantidad="720"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="806469DJ2A" Descripcion="ESCUT-RR DOOR O/S HA" PesoNeto="16.56" PesoTara="61.14" Pedimento="" FraccionArancelaria="" Cantidad="720"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="806765RB0A" Descripcion="CAP-INSIDE HANDLE,RH" PesoNeto="19.656" PesoTara="63.844" Pedimento="" FraccionArancelaria="" Cantidad="2808"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="806775RB0A" Descripcion="CAP-INSIDE HANDLE,LH" PesoNeto="19.656" PesoTara="63.844" Pedimento="" FraccionArancelaria="" Cantidad="2808"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="824005RB0A" Descripcion="HINGE ASSY-RR DOOR,U" PesoNeto="492.48" PesoTara="65.02" Pedimento="" FraccionArancelaria="" Cantidad="1620"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="824015RB0A" Descripcion="HINGE ASSY-RR DOOR,U" PesoNeto="492.48" PesoTara="65.02" Pedimento="" FraccionArancelaria="" Cantidad="1620"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="921845R00A" Descripcion="SEAL-COND,SIDE RH" PesoNeto="57.546" PesoTara="80.654" Pedimento="" FraccionArancelaria="" Cantidad="414"/>
+        <cartaporte:DetalleFactura NumeroFactura="4BRA06" NumeroParte="969415RB1A" Descripcion="FIN ASSY-CONSOLE,AUT" PesoNeto="0.432" PesoTara="284.968" Pedimento="" FraccionArancelaria="" Cantidad="432"/>
+      </cartaporte:Mercancia>
+      <cartaporte:Mercancia ClaveSTCC="" Descripcion="Rack Vacios" Unidad="PIEZAS">
+        <cartaporte:CantidadTransporta CantidadTrans="602" IDOrigen="OR006010" IDDestino="DE000810"/>
+        <cartaporte:DetalleMercancia UnidadPeso="KGM" PesoBruto="4311.743" PesoNeto="3911.4" PesoTara="400.32"/>
+      </cartaporte:Mercancia>
+    </cartaporte:Mercancias>
+    <cartaporte:Contenedor/>
+  </cartaporte:CartaPorte30>
+</cfdi:Comprobante>

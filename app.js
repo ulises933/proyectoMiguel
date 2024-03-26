@@ -323,7 +323,6 @@ function validateInputData(data) {
     }
     
     const validationResult = mainSchema.validate(data, { abortEarly: false, messages: customErrorMessages });
-    console.log(errors)
   if (validationResult.error) {
     return {
       errors: validationResult.error.details.map((error) => error.message),
