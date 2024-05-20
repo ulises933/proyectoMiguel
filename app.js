@@ -52,36 +52,57 @@ async function ProcessDataCFDI(dataArray) {
             errorDetail: validationResult.error.details.map(detail => ({
               message: detail.message,
             })),
-          }]
+          }],
+          errors: [{
+            code: "400",
+            title: "Bad Request",
+            detail: "Validation error",
+          }],
         });
         await errorToSave.save();
         return {
           success: false,
-          data: { message: "Se procesó parcialmente" },
-          errors: validationResult.error.details.map(detail => {
-            return {
-              code: "400",
-              source: "Bad Requests",
-              detail: detail.message 
-            };
-          })
+          data: [{
+            folio: data.NumeroOperacion.toString(),
+            errorDetail: validationResult.error.details.map(detail => ({
+              message: detail.message,
+            })),
+          }],
+          errors: validationResult.error.details.map(detail => ({
+            code: "400",
+            title: "Bad Request",
+            detail: detail.message,
+          })),
         };
       } else {
-        try{
+        try {
           await ErrorLog.deleteMany({ "data.folio": data.NumeroOperacion.toString() });
-        }catch(error){
+        } catch (error) {
           console.log(error);
         }
         const xml = buildCartaPorteXML(data); // Asegúrate de que esta función no tenga efectos secundarios si se espera o no su resultado
         return {
           success: true,
-          data: { message: "Se procesó exitosamente" },
-          errors: []
+          data: [{
+            folio: data.NumeroOperacion.toString(),
+            errorDetail: [],
+          }],
+          errors: [{
+            code: "",
+            title: "",
+            detail: "Sin errores",
+          }],
         };
       }
     }));
+    
+    const finalResponse = {
+      success: results.every(result => result.success),
+      data: results.map(result => result.data).flat(),
+      errors: results.map(result => result.errors).flat().filter(error => error.detail !== "Sin errores"),
+    };
 
-    return results;
+    return finalResponse;
   } catch (error) {
     const errorToSave = new ErrorLog({
       success: false,
