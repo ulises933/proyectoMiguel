@@ -11,6 +11,10 @@ const builder = require('xmlbuilder');
 const moment = require('moment');
 const https = require('https');
 const http = require('http');
+const Conductor = require('./models/auxiliar'); 
+const Autotransporte = require('./models/autrans');
+const FolioSuat = require('./models/Folio'); 
+
 const authenticateToken = require('./controllers/authenticateToken');
 
 
@@ -28,6 +32,244 @@ mongoose
   .then(() => console.log("Conectado a MongoDB"))
   .catch((error) => console.error("Error al conectar a MongoDB:", error));
 
+// Endpoint para guardar la relación FolioSuat
+app.post('/api/guardarFolioSuat', [
+  body('autotransporte').notEmpty(),
+  body('conductor').notEmpty(),
+  body('folioSuat').notEmpty()
+], authenticateToken, async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
+
+  const { autotransporte, conductor, folioSuat } = req.body;
+
+  try {
+    const autotransporteDoc = await Autotransporte.findById(autotransporte);
+    const conductorDoc = await Conductor.findById(conductor);
+
+    if (!autotransporteDoc || !conductorDoc) {
+      return res.status(404).json({ message: 'Autotransporte o Conductor no encontrado' });
+    }
+
+    const nuevoFolioSuat = new FolioSuat({
+      Autotransporte: autotransporteDoc._id,
+      FiguraTransporte: conductorDoc._id,
+      FolioSuat: folioSuat
+    });
+
+    const folioSuatGuardado = await nuevoFolioSuat.save();
+    
+    res.status(201).json(folioSuatGuardado);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al guardar la relación FolioSuat', error });
+  }
+});
+
+app.get('/api/autotransportes', authenticateToken, async (req, res) => {
+  try {
+    const autotransportes = await Autotransporte.find();
+    res.status(200).json(autotransportes);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener los autotransportes', error });
+  }
+});
+app.get('/api/conductores', authenticateToken, async (req, res) => {
+  try {
+    const conductores = await Conductor.find();
+    res.status(200).json(conductores);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener los conductores', error });
+  }
+});
+app.get('/api/foliosuat', authenticateToken, async (req, res) => {
+  try {
+    const foliosSuat = await FolioSuat.find().populate('Autotransporte FiguraTransporte');
+    res.status(200).json(foliosSuat);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener los folios Suat', error });
+  }
+});
+app.get('/api/autotransportes/:id', authenticateToken, async (req, res) => {
+  try {
+    const autotransporte = await Autotransporte.findById(req.params.id);
+    if (!autotransporte) {
+      return res.status(404).json({ message: 'Autotransporte no encontrado' });
+    }
+    res.status(200).json(autotransporte);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener el autotransporte', error });
+  }
+});
+app.get('/api/conductores/:id', authenticateToken, async (req, res) => {
+  try {
+    const conductor = await Conductor.findById(req.params.id);
+    if (!conductor) {
+      return res.status(404).json({ message: 'Conductor no encontrado' });
+    }
+    res.status(200).json(conductor);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener el conductor', error });
+  }
+});
+app.get('/api/foliosuat/:id', authenticateToken, async (req, res) => {
+  try {
+    const folioSuat = await FolioSuat.findById(req.params.id).populate('Autotransporte FiguraTransporte');
+    if (!folioSuat) {
+      return res.status(404).json({ message: 'FolioSuat no encontrado' });
+    }
+    res.status(200).json(folioSuat);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener el FolioSuat', error });
+  }
+});
+app.delete('/api/autotransportes/:id', authenticateToken, async (req, res) => {
+  try {
+    const autotransporte = await Autotransporte.findByIdAndDelete(req.params.id);
+    if (!autotransporte) {
+      return res.status(404).json({ message: 'Autotransporte no encontrado' });
+    }
+    res.status(200).json({ message: 'Autotransporte eliminado exitosamente' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar el autotransporte', error });
+  }
+});
+app.delete('/api/conductores/:id', authenticateToken, async (req, res) => {
+  try {
+    const conductor = await Conductor.findByIdAndDelete(req.params.id);
+    if (!conductor) {
+      return res.status(404).json({ message: 'Conductor no encontrado' });
+    }
+    res.status(200).json({ message: 'Conductor eliminado exitosamente' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar el conductor', error });
+  }
+});
+app.delete('/api/foliosuat/:id', authenticateToken, async (req, res) => {
+  try {
+    const folioSuat = await FolioSuat.findByIdAndDelete(req.params.id);
+    if (!folioSuat) {
+      return res.status(404).json({ message: 'FolioSuat no encontrado' });
+    }
+    res.status(200).json({ message: 'FolioSuat eliminado exitosamente' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar el FolioSuat', error });
+  }
+});
+app.put('/api/autotransportes/:id', authenticateToken, async (req, res) => {
+  const { PermSCT, NumPermisoSCT, IdentificacionVehicular, Seguros, Remolques } = req.body;
+  try {
+    const autotransporte = await Autotransporte.findByIdAndUpdate(
+      req.params.id,
+      { PermSCT, NumPermisoSCT, IdentificacionVehicular, Seguros, Remolques },
+      { new: true, runValidators: true }
+    );
+    if (!autotransporte) {
+      return res.status(404).json({ message: 'Autotransporte no encontrado' });
+    }
+    res.status(200).json(autotransporte);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar el autotransporte', error });
+  }
+});
+app.put('/api/conductores/:id', authenticateToken, async (req, res) => {
+  const { TipoFigura, RFCFigura, NumLicencia, NombreFigura } = req.body;
+  try {
+    const conductor = await Conductor.findByIdAndUpdate(
+      req.params.id,
+      { TipoFigura, RFCFigura, NumLicencia, NombreFigura },
+      { new: true, runValidators: true }
+    );
+    if (!conductor) {
+      return res.status(404).json({ message: 'Conductor no encontrado' });
+    }
+    res.status(200).json(conductor);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar el conductor', error });
+  }
+});
+app.put('/api/foliosuat/:id', authenticateToken, async (req, res) => {
+  const { Autotransporte, FiguraTransporte, FolioSuat } = req.body;
+  try {
+    const folioSuat = await FolioSuat.findByIdAndUpdate(
+      req.params.id,
+      { Autotransporte, FiguraTransporte, FolioSuat },
+      { new: true, runValidators: true }
+    );
+    if (!folioSuat) {
+      return res.status(404).json({ message: 'FolioSuat no encontrado' });
+    }
+    res.status(200).json(folioSuat);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar el FolioSuat', error });
+  }
+});
+
+
+  app.post('/api/guardarAutotransporte', [
+    body('PermSCT').notEmpty(),
+    body('NumPermisoSCT').notEmpty(),
+    body('IdentificacionVehicular.ConfigVehicular').notEmpty(),
+    body('IdentificacionVehicular.PesoBrutoVehicular').notEmpty(),
+    body('IdentificacionVehicular.PlacaVM').notEmpty(),
+    body('IdentificacionVehicular.AnioModeloVM').notEmpty(),
+    body('Seguros.AseguraRespCivil').notEmpty(),
+    body('Seguros.PolizaRespCivil').notEmpty(),
+    body('Remolques.Remolque').isArray(),
+    body('Remolques.Remolque.*.SubTipoRem').notEmpty(),
+    body('Remolques.Remolque.*.Placa').notEmpty()
+  ], authenticateToken, async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+  
+    const { PermSCT, NumPermisoSCT, IdentificacionVehicular, Seguros, Remolques } = req.body;
+  
+    const nuevoAutotransporte = new Autotransporte({
+      PermSCT,
+      NumPermisoSCT,
+      IdentificacionVehicular,
+      Seguros,
+      Remolques
+    });
+  
+    try {
+      const autotransporteGuardado = await nuevoAutotransporte.save();
+      res.status(201).json(autotransporteGuardado);
+    } catch (error) {
+      res.status(500).json({ message: 'Error al guardar el autotransporte', error });
+    }
+  });
+
+  app.post('/api/guardarCamionero', [
+    body('TipoFigura').notEmpty(),
+    body('RFCFigura').notEmpty(),
+    body('NumLicencia').notEmpty(),
+    body('NombreFigura').notEmpty()
+  ], authenticateToken, async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+  
+    const { TipoFigura, RFCFigura, NumLicencia, NombreFigura } = req.body;
+  
+    const nuevoConductor = new Conductor({
+      TipoFigura,
+      RFCFigura,
+      NumLicencia,
+      NombreFigura
+    });
+  
+    try {
+      const conductorGuardado = await nuevoConductor.save();
+      res.status(201).json(conductorGuardado);
+    } catch (error) {
+      res.status(500).json({ message: 'Error al guardar el conductor', error });
+    }
+  });
 
 app.post(
   "/login",

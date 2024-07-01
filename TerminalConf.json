@@ -1,0 +1,164 @@
+{
+  "Comprobante": {
+    "Version": "4.0",
+    "Serie": "LCP",
+    "Folio": "LCPD001-0016",
+    "Fecha": "2024-06-09T00:00:59",
+    "NoCertificado": "30001000000500003416",
+    "SubTotal": "0",
+    "Moneda": "XXX",
+    "Total": "0",
+    "TipoDeComprobante": "T",
+    "Exportacion": "01",
+    "LugarExpedicion": "42501",
+    "Emisor": {
+      "Rfc": "EKU9003173C9",
+      "Nombre": "ESCUELA KEMPER URGATE",
+      "RegimenFiscal": "601"
+    },
+    "Receptor": {
+      "Rfc": "EKU9003173C9",
+      "Nombre": "ESCUELA KEMPER URGATE",
+      "DomicilioFiscalReceptor": "42501",
+      "RegimenFiscalReceptor": "601",
+      "UsoCFDI": "S01"
+    },
+    "Conceptos": [
+      {
+        "ClaveProdServ": "11121900",
+        "NoIdentificacion": "UT421511",
+        "Cantidad": "1",
+        "ClaveUnidad": "H87",
+        "Unidad": "Pieza",
+        "Descripcion": "Transporte de carga por carretera",
+        "ValorUnitario": "100.00",
+        "Importe": "100.00",
+        "ObjetoImp": "01"
+      }
+    ],
+    "Complemento": [
+      {
+        "CartaPorte30": {
+          "Version": "3.0",
+          "IdCCP": "CCCBCD94-870A-4332-A52A-A52AA52AA52A", //GUID
+          "TranspInternac": "No",
+          "TotalDistRec": "1",
+          "RegistroISTMO":"Sí",
+          "UbicacionPoloDestino":"01",
+          "UbicacionPoloOrigen":"01",
+          "Ubicaciones": {
+            "Ubicacion": [
+              {
+                "TipoUbicacion": "Origen",
+                "IDUbicacion": "OR101010",
+                "RFCRemitenteDestinatario": "EKU9003173C9",
+                "NombreRemitenteDestinatario":"NombreRemitenteDestinatario1",
+                "FechaHoraSalidaLlegada": "2023-08-01T18:00:00",
+                "Domicilio": {
+                  "Calle":"Calle1",
+                  "Colonia": "1957",
+                  "Localidad": "13",
+                  "Municipio": "011",
+                  "NumeroExterior":"211",
+                  "NumeroInterior":"212",
+                  "Estado": "CMX",
+                  "Pais": "MEX",
+                  "CodigoPostal": "13250",
+                  "Referencia":"casa blanca"
+                }
+              },
+              {
+                "TipoUbicacion": "Destino",
+                "IDUbicacion": "DE202020",
+                "RFCRemitenteDestinatario": "EKU9003173C9",
+                "NombreRemitenteDestinatario":"NombreRemitenteDestinatario2",
+                "FechaHoraSalidaLlegada": "2023-08-01T00:00:01",
+                "DistanciaRecorrida":"1",
+                "Domicilio": {
+                  "Calle":"Calle2",
+                  "Colonia": "0347",
+                  "Localidad": "23",
+                  "Municipio": "004",
+                  "NumeroExterior":"214",
+                  "NumeroInterior":"215",
+                  "Estado": "COA",
+                  "Pais": "MEX",
+                  "CodigoPostal": "25350",
+                  "Referencia":"casa negra"
+                }
+              }
+            ]
+          },
+          "Mercancias": {
+            "PesoBrutoTotal": "1",
+            "PesoNetoTotal":"1",
+            "NumTotalMercancias":"1",
+            "UnidadPeso": "XBX",
+            "LogisticaInversaRecoleccionDevolucion":"Sí",
+            "Mercancia": [
+              {
+                "BienesTransp": "11121900",
+                "Descripcion": "Accesorios de equipo de telefonía",
+                "Cantidad": "1.00",
+                "ClaveUnidad": "XBX",
+                "SectorCOFEPRIS": "01",
+                "DenominacionGenericaProd": "DenominacionGenericaProd1",
+                "DenominacionDistintivaProd": "DenominacionDistintivaProd1",
+                "Fabricante": "Fabricante1",
+                "FechaCaducidad": "2028-01-01",
+                "LoteMedicamento": "LoteMedic1",
+                "MaterialPeligroso":"No",
+                "CondicionesEspTransp": "01",
+                "RegistroSanitarioFolioAutorizacion": "RegistroSanita1",
+                "PesoEnKg": "1.00",
+                "CantidadTransporta": [
+                  {
+                    "Cantidad": "1",
+                    "IDOrigen": "OR101010",
+                    "IDDestino": "DE202020"
+                  }
+                ]
+              }
+            ],
+            "Autotransporte": {
+              "PermSCT": "TPAF01",
+              "NumPermisoSCT": "NumPermisoSCT1",
+              "IdentificacionVehicular": {
+                "ConfigVehicular": "VL",
+                "PesoBrutoVehicular": "1",
+                "PlacaVM": "plac892",
+                "AnioModeloVM": "2020"
+              },
+              "Seguros": {
+                "AseguraRespCivil": "AseguraRespCivil",
+                "PolizaRespCivil": "123456789"
+              },
+              "Remolques": {
+                "Remolque": [
+                  {
+                    "SubTipoRem": "CTR004",
+                    "Placa": "VL45K98"
+                  }
+                ]
+              }
+            }
+          },
+          "FiguraTransporte": {
+            "TiposFigura": [
+              {
+                "TipoFigura": "01",
+                "RFCFigura": "CACX7605101P8",
+                "NumLicencia": "a234567890",
+                "NombreFigura": "Nombre Apellido"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "CamposPDF": {
+    "tipoComprobante": "Carta Porte",
+    "Comentarios": "Sin comentarios"
+  }
+}
