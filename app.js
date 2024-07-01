@@ -38,8 +38,8 @@ app.post('/api/guardarFolioSuat', [
   body('conductor').notEmpty(),
   body('folioSuat').notEmpty()
 ], authenticateToken, async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
+  const errors = ''
+  if (errors != '') {
     return res.status(400).json({ errors: errors.array() });
   }
 
@@ -220,8 +220,8 @@ app.put('/api/foliosuat/:id', authenticateToken, async (req, res) => {
     body('Remolques.Remolque.*.SubTipoRem').notEmpty(),
     body('Remolques.Remolque.*.Placa').notEmpty()
   ], authenticateToken, async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+    const errors = ''
+    if (errors != '') {
       return res.status(400).json({ errors: errors.array() });
     }
   
@@ -249,8 +249,8 @@ app.put('/api/foliosuat/:id', authenticateToken, async (req, res) => {
     body('NumLicencia').notEmpty(),
     body('NombreFigura').notEmpty()
   ], authenticateToken, async (req, res) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
+    const errors = ''
+    if (errors != '' ) {
       return res.status(400).json({ errors: errors.array() });
     }
   
