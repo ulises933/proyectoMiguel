@@ -13,7 +13,8 @@ const https = require('https');
 const http = require('http');
 const Conductor = require('./models/auxiliar'); 
 const Autotransporte = require('./models/autrans');
-const FolioSuat = require('./models/Folio'); 
+const FolioSuat = require('./models/Folio');
+const path = require('path');
 
 const authenticateToken = require('./controllers/authenticateToken');
 
@@ -279,6 +280,39 @@ app.post(
   ],
   authController.login
 );
+// END POINT PARA DESCARGAR LO ARCHIVOS DE CARTAPORTE
+
+// Endpoint para listar archivos XML
+
+app.get('/api/listarArchivosXML', (req, res) => {
+  const rutaCarpeta = path.join(__dirname, 'xml');
+  fs.readdir(rutaCarpeta, (err, archivos) => {
+    if (err) {
+      return res.status(500).json({ message: 'Error al listar los archivos', error: err });
+    }
+    const archivosXML = archivos.filter(archivo => archivo.endsWith('.xml'));
+    const archivosConFecha = archivosXML.map(archivo => {
+      const rutaArchivo = path.join(rutaCarpeta, archivo);
+      const stats = fs.statSync(rutaArchivo);
+      return {
+        nombre: archivo,
+        fechaCreacion: stats.birthtime
+      };
+    });
+    res.status(200).json(archivosConFecha);
+  });
+});
+
+// Endpoint para descargar un archivo XML
+app.get('/api/descargarXML/:nombreArchivo', (req, res) => {
+  const nombreArchivo = req.params.nombreArchivo;
+  const rutaArchivo = path.join(__dirname, 'xml', nombreArchivo);
+  res.download(rutaArchivo, err => {
+    if (err) {
+      return res.status(500).json({ message: 'Error al descargar el archivo', error: err });
+    }
+  });
+});
 
 // end point de pureba ***********************************
 async function ProcessDataCFDI(dataArray) {
