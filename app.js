@@ -15,6 +15,7 @@ const Conductor = require('./models/auxiliar');
 const Autotransporte = require('./models/autrans');
 const FolioSuat = require('./models/Folio');
 const path = require('path');
+const FolioAux = require('./models/Folioaux');
 
 const authenticateToken = require('./controllers/authenticateToken');
 
@@ -39,16 +40,19 @@ app.post('/api/guardarFolioSuat', [
   body('conductor').notEmpty(),
   body('folioSuat').notEmpty()
 ], authenticateToken, async (req, res) => {
-  const errors = ''
-  if (errors != '') {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   const { autotransporte, conductor, folioSuat } = req.body;
-
+  
   try {
+    
+    console.log('Buscando autotransporte por _id:', autotransporte);
     const autotransporteDoc = await Autotransporte.findById(autotransporte);
+    console.log('Resultado de autotransporte:', autotransporteDoc);
+
+    console.log('Buscando conductor por _id:', conductor);
     const conductorDoc = await Conductor.findById(conductor);
+    console.log('Resultado de conductor:', conductorDoc);
+
+    
 
     if (!autotransporteDoc || !conductorDoc) {
       return res.status(404).json({ message: 'Autotransporte o Conductor no encontrado' });
@@ -67,6 +71,11 @@ app.post('/api/guardarFolioSuat', [
     res.status(500).json({ message: 'Error al guardar la relación FolioSuat', error });
   }
 });
+
+
+
+
+
 
 app.get('/api/autotransportes', authenticateToken, async (req, res) => {
   try {
@@ -92,6 +101,16 @@ app.get('/api/foliosuat', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Error al obtener los folios Suat', error });
   }
 });
+//////////////////////////////////////////
+app.get('/api/folioaux', authenticateToken, async (req, res) => {
+  try {
+    const foliosaux = await FolioAux.find().populate('Folio');
+    res.status(200).json(foliosaux);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener los folios Suat', error });
+  }
+});
+
 app.get('/api/autotransportes/:id', authenticateToken, async (req, res) => {
   try {
     const autotransporte = await Autotransporte.findById(req.params.id);
@@ -114,6 +133,7 @@ app.get('/api/conductores/:id', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Error al obtener el conductor', error });
   }
 });
+
 app.get('/api/foliosuat/:id', authenticateToken, async (req, res) => {
   try {
     const folioSuat = await FolioSuat.findById(req.params.id).populate('Autotransporte FiguraTransporte');
@@ -125,6 +145,7 @@ app.get('/api/foliosuat/:id', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Error al obtener el FolioSuat', error });
   }
 });
+
 app.delete('/api/autotransportes/:id', authenticateToken, async (req, res) => {
   try {
     const autotransporte = await Autotransporte.findByIdAndDelete(req.params.id);
@@ -190,22 +211,31 @@ app.put('/api/conductores/:id', authenticateToken, async (req, res) => {
     res.status(500).json({ message: 'Error al actualizar el conductor', error });
   }
 });
+
 app.put('/api/foliosuat/:id', authenticateToken, async (req, res) => {
-  const { Autotransporte, FiguraTransporte, FolioSuat } = req.body;
+  const { Autotransporte, FiguraTransporte, folio } = req.body;
   try {
-    const folioSuat = await FolioSuat.findByIdAndUpdate(
+    console.log('Modelo FolioSuat:', FolioSuat); // Asegurémonos de que estamos utilizando el modelo correcto
+
+    const updatedFolioSuat = await FolioSuat.findByIdAndUpdate(
       req.params.id,
-      { Autotransporte, FiguraTransporte, FolioSuat },
+      { Autotransporte, FiguraTransporte, FolioSuat: folio },
       { new: true, runValidators: true }
     );
-    if (!folioSuat) {
+
+    if (!updatedFolioSuat) {
       return res.status(404).json({ message: 'FolioSuat no encontrado' });
     }
-    res.status(200).json(folioSuat);
+
+    res.status(200).json(updatedFolioSuat);
   } catch (error) {
+    console.error('Error al actualizar el FolioSuat:', error);
     res.status(500).json({ message: 'Error al actualizar el FolioSuat', error });
   }
 });
+
+
+
 
 
   app.post('/api/guardarAutotransporte', [
@@ -317,7 +347,6 @@ app.get('/api/descargarXML/:nombreArchivo', (req, res) => {
 // end point de pureba ***********************************
 async function ProcessDataCFDI(dataArray) {
   try {
-    // Utiliza Promise.all para esperar a que todas las promesas se resuelvan
     const results = await Promise.all(dataArray.map(async data => {
       const validationResult = validateInputData(data);
       if (validationResult.error) {
@@ -353,10 +382,14 @@ async function ProcessDataCFDI(dataArray) {
       } else {
         try {
           await ErrorLog.deleteMany({ "data.folio": data.NumeroOperacion.toString() });
+
+          // Guardar el Número de Operación como Folio en la base de datos
+          const folioaux = new Folioaux({ Folio: data.NumeroOperacion.toString() });
+          await folioaux.save();
         } catch (error) {
           console.log(error);
         }
-        const xml = buildCartaPorteXML(data); // Asegúrate de que esta función no tenga efectos secundarios si se espera o no su resultado
+        const xml = buildCartaPorteXML(data);
         return {
           success: true,
           data: [{
@@ -371,7 +404,7 @@ async function ProcessDataCFDI(dataArray) {
         };
       }
     }));
-    
+
     const finalResponse = {
       success: results.every(result => result.success),
       data: results.map(result => result.data).flat(),
