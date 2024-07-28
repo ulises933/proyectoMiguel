@@ -38,9 +38,23 @@ mongoose
 app.post('/api/guardarFolioSuat', [
   body('autotransporte').notEmpty(),
   body('conductor').notEmpty(),
-  body('folioSuat').notEmpty()
+  body('folioSuat').notEmpty(),
+  body ('fleteB').notEmpty(),
+  body ('casetas').notEmpty(),
+  body ('diesel').notEmpty(),
+  body ('stops').notEmpty(),
+  body ('total').notEmpty()
 ], authenticateToken, async (req, res) => {
-  const { autotransporte, conductor, folioSuat } = req.body;
+  const { 
+    autotransporte, 
+    conductor, 
+    folioSuat, 
+    fleteB, 
+    casetas,
+    diesel,
+    stops,
+    total
+   } = req.body;
   
   try {
     
@@ -61,9 +75,15 @@ app.post('/api/guardarFolioSuat', [
     const nuevoFolioSuat = new FolioSuat({
       Autotransporte: autotransporteDoc._id,
       FiguraTransporte: conductorDoc._id,
-      FolioSuat: folioSuat
+      FolioSuat: folioSuat,
+      FleteBase: fleteB,
+      Casetas: casetas,
+      Diesel: diesel,
+      Stops: stops,
+      Total: total
     });
 
+    console.log(nuevoFolioSuat);
     const folioSuatGuardado = await nuevoFolioSuat.save();
     
     res.status(201).json(folioSuatGuardado);
@@ -213,13 +233,13 @@ app.put('/api/conductores/:id', authenticateToken, async (req, res) => {
 });
 
 app.put('/api/foliosuat/:id', authenticateToken, async (req, res) => {
-  const { Autotransporte, FiguraTransporte, folio } = req.body;
+  const { Autotransporte, FiguraTransporte, folio, fleteB, casetas, diesel, stops, total } = req.body;
   try {
     console.log('Modelo FolioSuat:', FolioSuat); // Asegurémonos de que estamos utilizando el modelo correcto
 
     const updatedFolioSuat = await FolioSuat.findByIdAndUpdate(
       req.params.id,
-      { Autotransporte, FiguraTransporte, FolioSuat: folio },
+      { Autotransporte, FiguraTransporte, FolioSuat: folio, FleteBase: fleteB, Casetas: casetas, Diesel: diesel, Stops: stops, Total: total },
       { new: true, runValidators: true }
     );
 
